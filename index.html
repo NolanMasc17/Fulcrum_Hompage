@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fulcrum | From Vibes to Proof</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --white: #ffffff;
+            --off-white: #fafafa;
+            --light-gray: #f5f5f5;
+            --medium-gray: #e5e5e5;
+            --text-gray: #6b7280;
+            --dark-gray: #374151;
+            --black: #111827;
+            --accent-subtle: #1f2937;
+            --border-light: #e5e7eb;
+            --border-medium: #d1d5db;
+            --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-sm: 0 10px 20px -10px rgba(0, 0, 0, 0.14);
+            --shadow-md: 0 18px 40px -18px rgba(0, 0, 0, 0.18);
+            --shadow-lg: 0 28px 70px -28px rgba(0, 0, 0, 0.22);
+            --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+            scroll-behavior: smooth;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--white);
+            color: var(--black);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        /* Subtle Background (radials + dot grid + ultra-faint texture) */
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100vh;
+            background:
+                radial-gradient(circle at 30% 20%, rgba(0, 0, 0, 0.020) 0%, transparent 55%),
+                radial-gradient(circle at 70% 80%, rgba(0, 0, 0, 0.012) 0%, transparent 55%),
+                radial-gradient(circle, rgba(17, 24, 39, 0.06) 1px, transparent 1px);
+            background-size: auto, auto, 26px 26px;
+            animation: dotDrift 40s linear infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .gradient-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: repeating-linear-gradient(
+                0deg,
+                rgba(17, 24, 39, 0.010),
+                rgba(17, 24, 39, 0.010) 1px,
+                transparent 1px,
+                transparent 7px
+            );
+            opacity: 0.65;
+            mix-blend-mode: multiply;
+        }
+
+        @keyframes dotDrift {
+            0% { background-position: 0 0, 0 0, 0 0; }
+            100% { background-position: 0 0, 0 0, 260px 180px; }
+        }
+
+        /* Navigation (floating pill) */
+       /* Fixed & Refined Navigation */
+        nav {
+            position: fixed;
+            top: 0; /* Anchored to top to remove white space */
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(18px) saturate(180%);
+            border-bottom: 1px solid rgba(17, 24, 39, 0.06); /* Clean line instead of floating border */
+            transition: all 0.35s var(--ease-out);
+        }
+
+        /* Scrolled state for a more compact feel */
+        nav.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 0.2rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem; /* Reduced padding for a tighter look */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.1rem;
+            font-weight: 900;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--black);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-gray);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: color 0.2s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--black);
+        }
+
+        /* Fixed the Button: Professional CTA */
+        .nav-cta {
+            padding: 0.65rem 1.4rem;
+            background: var(--black);
+            color: var(--white) !important; /* Force white text */
+            border-radius: 8px; /* Slightly squarer for 2026 enterprise look */
+            font-weight: 700;
+            font-size: 0.875rem;
+            transition: all 0.25s var(--ease-out);
+            border: 1px solid var(--black);
+        }
+
+        .nav-cta:hover {
+            background: transparent;
+            color: var(--black) !important;
+            transform: translateY(-1px);
+        }
+
+        /* Adjust Hero so it doesn't get buried under the new full-width nav */
+        .hero {
+            padding-top: 100px; 
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 9.5rem 5% 8rem;
+            position: relative;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(250, 250, 250, 0.3) 100%);
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+            text-align: center;
+        }
+
+        .hero-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--light-gray);
+            border: 1px solid var(--border-light);
+            border-radius: 50px;
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            margin: 0 auto 2rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            transition: all 0.2s ease;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--black);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+            box-shadow: 0 0 8px rgba(17, 24, 39, 0.6), 0 0 3px rgba(17, 24, 39, 0.8);
+        }
+
+        @keyframes pulse {
+            0%, 100% { 
+                opacity: 1;
+                box-shadow: 0 0 8px rgba(17, 24, 39, 0.6), 0 0 3px rgba(17, 24, 39, 0.8);
+            }
+            50% { 
+                opacity: 0.4;
+                box-shadow: 0 0 12px rgba(17, 24, 39, 0.8), 0 0 6px rgba(17, 24, 39, 1);
+            }
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 7vw, 6rem);
+            font-weight: 900;
+            line-height: 1.06;
+            margin-bottom: 1.25rem;
+            letter-spacing: -0.045em;
+            color: var(--black);
+        }
+
+        .hero-description {
+            font-size: clamp(1.125rem, 2vw, 1.25rem);
+            color: var(--text-gray);
+            line-height: 1.7;
+            margin: 0 auto 2.5rem;
+            max-width: 700px;
+            font-weight: 400;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            padding: 1rem 2rem;
+            background: var(--black);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.938rem;
+            letter-spacing: -0.01em;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 14px 32px rgba(17, 24, 39, 0.16);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-subtle);
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 24px 48px -12px rgba(17, 24, 39, 0.35);
+        }
+
+        .btn-primary:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .btn-secondary {
+            padding: 1rem 2rem;
+            background: var(--white);
+            color: var(--black);
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.938rem;
+            letter-spacing: -0.01em;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 2px solid var(--border-medium);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow-xs);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-secondary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--black);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+            z-index: -1;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--black);
+            color: var(--white);
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 20px 40px -12px rgba(17, 24, 39, 0.25);
+        }
+
+        .btn-secondary:hover::before {
+            transform: scaleX(1);
+        }
+
+        .btn-secondary:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 8rem 5%;
+            position: relative;
+        }
+
+        .section-alt {
+            background: var(--off-white);
+        }
+
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            max-width: 800px;
+            margin: 0 auto 4rem;
+            text-align: center;
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            margin-bottom: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.25rem;
+            letter-spacing: -0.025em;
+            color: var(--black);
+        }
+
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: var(--text-gray);
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        /* Comparison Cards */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .comparison-card {
+            background: var(--white);
+            border: 1px solid rgba(17, 24, 39, 0.10);
+            padding: 2.5rem;
+            border-radius: 16px;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+        }
+
+        .comparison-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--black), var(--dark-gray));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .comparison-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 16px;
+            background: radial-gradient(circle at center, rgba(17, 24, 39, 0.03), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .comparison-card:hover {
+            border-color: rgba(17, 24, 39, 0.25);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.3);
+        }
+
+        .comparison-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .comparison-card:hover::after {
+            opacity: 1;
+        }
+
+        .comparison-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            color: var(--text-gray);
+        }
+
+        .comparison-card.fulcrum .comparison-label {
+            color: var(--black);
+        }
+
+        .comparison-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+            line-height: 1.3;
+            color: var(--black);
+        }
+
+        .comparison-description {
+            color: var(--text-gray);
+            line-height: 1.7;
+            font-size: 0.938rem;
+        }
+
+        /* Principles Grid */
+        .principles-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .principle-card {
+            background: var(--white);
+            border: 1px solid rgba(17, 24, 39, 0.10);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .principle-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, var(--black), var(--dark-gray));
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .principle-card:hover {
+            border-color: rgba(17, 24, 39, 0.25);
+            box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.3);
+            transform: translateX(10px) translateY(-6px) scale(1.01);
+        }
+
+        .principle-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .principle-content {
+            padding: 2.5rem;
+        }
+
+        .principle-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.688rem;
+            color: var(--text-gray);
+            margin-bottom: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .principle-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            letter-spacing: -0.02em;
+            line-height: 1.3;
+            color: var(--black);
+        }
+
+        .principle-fact {
+            background: var(--off-white);
+            padding: 1.25rem;
+            border-left: 3px solid var(--black);
+            margin-bottom: 1.25rem;
+            transition: all 0.2s ease;
+        }
+
+        .principle-card:hover .principle-fact {
+            background: var(--light-gray);
+        }
+
+        .principle-fact-label {
+            font-size: 0.688rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--black);
+            margin-bottom: 0.5rem;
+        }
+
+        .principle-fact-text {
+            color: var(--dark-gray);
+            line-height: 1.7;
+            font-size: 0.938rem;
+        }
+
+        .principle-result {
+            color: var(--text-gray);
+            line-height: 1.7;
+            font-size: 0.938rem;
+        }
+
+        .principle-result strong {
+            color: var(--black);
+            font-weight: 700;
+        }
+
+        /* Reasoning Trace */
+        .reasoning-trace {
+            max-width: 1000px;
+            margin: 3rem auto 0;
+            background: var(--white);
+            border: 1px solid rgba(17, 24, 39, 0.10);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out), border-color 0.25s ease;
+        }
+
+        .reasoning-trace:hover {
+            border-color: rgba(17, 24, 39, 0.22);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .trace-header {
+            background: var(--off-white);
+            padding: 1.25rem 1.75rem;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .trace-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.813rem;
+            color: var(--black);
+            font-weight: 700;
+            letter-spacing: 0;
+        }
+
+        .trace-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.688rem;
+            color: var(--black);
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .trace-status::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--black);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .trace-content {
+            padding: 2rem 1.75rem;
+        }
+
+        .trace-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .trace-step {
+            display: grid;
+            grid-template-columns: 90px 1fr;
+            gap: 1.5rem;
+            padding: 1.25rem;
+            background: var(--off-white);
+            border: 1px solid rgba(17, 24, 39, 0.08);
+            border-radius: 14px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .trace-step::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, var(--black), var(--dark-gray));
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 0.3s ease;
+            border-radius: 14px 0 0 14px;
+        }
+
+        .trace-step:hover {
+            background: var(--white);
+            border-color: rgba(17, 24, 39, 0.25);
+            transform: translateX(10px) translateY(-3px);
+            box-shadow: 0 16px 32px -12px rgba(0, 0, 0, 0.2);
+        }
+
+        .trace-step:hover::before {
+            transform: scaleY(1);
+        }
+
+        .trace-step-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.813rem;
+            color: var(--text-gray);
+            font-weight: 700;
+            letter-spacing: 0;
+        }
+
+        .trace-step-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .trace-step-label {
+            font-size: 0.875rem;
+            color: var(--black);
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+
+        .trace-step-data {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.813rem;
+            color: var(--text-gray);
+            line-height: 1.6;
+            letter-spacing: 0.01em;
+            word-break: break-word;
+            opacity: 0.8;
+        }
+
+        .trace-step-highlight {
+            color: var(--black);
+            font-weight: 700;
+            opacity: 1;
+        }
+
+        /* Architecture Diagram */
+        .architecture-visual {
+            max-width: 1000px;
+            margin: 3rem auto 0;
+            background: var(--white);
+            border: 1px solid rgba(17, 24, 39, 0.10);
+            border-radius: 16px;
+            padding: 3rem;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out), border-color 0.25s ease;
+        }
+
+        .architecture-visual:hover {
+            border-color: rgba(17, 24, 39, 0.22);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .architecture-diagram {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .arch-node {
+            background: var(--off-white);
+            border: 1px solid rgba(17, 24, 39, 0.08);
+            border-radius: 14px;
+            padding: 2rem 1.5rem;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .arch-node::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 14px;
+            background: radial-gradient(circle at center, rgba(17, 24, 39, 0.05), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .arch-node:hover {
+            border-color: rgba(17, 24, 39, 0.25);
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.3);
+            background: var(--white);
+        }
+
+        .arch-node:hover::before {
+            opacity: 1;
+        }
+
+        .arch-icon {
+            width: 52px;
+            height: 52px;
+            margin: 0 auto 1.25rem;
+            background: var(--white);
+            border: 1px solid rgba(17, 24, 39, 0.10);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.25s var(--ease-out), background 0.2s ease, border-color 0.2s ease;
+            box-shadow: var(--shadow-xs);
+        }
+
+        .arch-node:hover .arch-icon {
+            background: var(--black);
+            border-color: var(--black);
+            transform: translateY(-2px) rotate(-2deg);
+        }
+
+        .arch-icon svg {
+            width: 24px;
+            height: 24px;
+            color: var(--black);
+            transition: color 0.2s ease;
+        }
+
+        .arch-node:hover .arch-icon svg {
+            color: var(--white);
+        }
+
+        .arch-node h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.01em;
+            color: var(--black);
+        }
+
+        .arch-node p {
+            color: var(--text-gray);
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        /* Stats Showcase */
+        .stats-showcase {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0;
+            max-width: 1100px;
+            margin: 4rem auto 0;
+            border: 1px solid rgba(17, 24, 39, 0.10);
+            border-radius: 16px;
+            overflow: hidden;
+            background: var(--white);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-item {
+            padding: 3rem 2.5rem;
+            border-right: 1px solid var(--border-light);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            background: var(--white);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .stat-item:last-child {
+            border-right: none;
+        }
+
+        /* Top Border Slide Animation */
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--black), #4b5563);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2;
+        }
+
+        /* Subtle Radial Glow on Hover */
+        .stat-item::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(17, 24, 39, 0.03), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .stat-item:hover {
+            background: var(--off-white);
+            transform: translateY(-6px) scale(1.01);
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15);
+            z-index: 5;
+        }
+
+        .stat-item:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-item:hover::after {
+            opacity: 1;
+        }
+
+        .stat-icon-wrapper {
+            width: 44px;
+            height: 44px;
+            margin-bottom: 1.5rem;
+            background: var(--light-gray);
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 3;
+        }
+
+        .stat-item:hover .stat-icon-wrapper {
+            background: var(--black);
+            border-color: var(--black);
+            transform: translateY(-2px) rotate(-3deg);
+        }
+
+        .stat-icon {
+            width: 20px;
+            height: 20px;
+            color: var(--black);
+            transition: color 0.3s ease;
+        }
+
+        .stat-item:hover .stat-icon {
+            color: var(--white);
+        }
+
+        .stat-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            position: relative;
+            z-index: 3;
+        }
+
+        .stat-number-large {
+            font-size: 2.75rem; /* Balanced for "Native" and "Rapid" */
+            font-weight: 800;
+            color: var(--black);
+            letter-spacing: -0.04em;
+            line-height: 1.1;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label-elegant {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--black);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+
+        .stat-description {
+            font-size: 0.875rem;
+            color: #6b7280;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 991px) {
+            .stats-showcase {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+            }
+            .stat-item {
+                border-right: none;
+                border-bottom: 1px solid var(--border-light);
+            }
+            .stat-item:last-child {
+                border-bottom: none;
+            }
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 8rem 5%;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(250, 250, 250, 0.5) 100%);
+            position: relative;
+            text-align: center;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.025em;
+            color: var(--black);
+        }
+
+        .cta-section p {
+            font-size: 1.125rem;
+            color: var(--text-gray);
+            margin-bottom: 2.5rem;
+            line-height: 1.7;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 5%;
+            background: var(--off-white);
+            border-top: 1px solid var(--border-light);
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-brand {
+            font-size: 1.125rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            color: var(--black);
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-legal {
+            color: var(--text-gray);
+            font-size: 0.875rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .architecture-diagram {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-showcase {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-item {
+                border-right: none;
+                border-bottom: 1px solid var(--border-light);
+            }
+
+            .stat-item:last-child {
+                border-bottom: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 8rem 5% 6rem;
+            }
+
+            .section {
+                padding: 5rem 5%;
+            }
+
+            .trace-step {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Scroll Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px) scale(0.95);
+            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            will-change: transform, opacity;
+        }
+
+        /* Staggered animation delays */
+        .reveal:nth-child(1) { transition-delay: 0.1s; }
+        .reveal:nth-child(2) { transition-delay: 0.2s; }
+        .reveal:nth-child(3) { transition-delay: 0.3s; }
+        .reveal:nth-child(4) { transition-delay: 0.4s; }
+        .reveal:nth-child(5) { transition-delay: 0.5s; }
+
+        /* Interactive cursor effect */
+        @media (hover: hover) {
+            a, button, .comparison-card, .principle-card, .trace-step, .arch-node, .stat-item {
+                cursor: pointer;
+            }
+        }
+
+        /* Enhanced focus states for accessibility */
+        .btn-primary:focus-visible,
+        .btn-secondary:focus-visible {
+            outline: 3px solid var(--black);
+            outline-offset: 3px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .reveal { opacity: 1; transform: none; transition: none; }
+            .gradient-bg { animation: none; }
+            .status-dot { animation: none; }
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="gradient-bg"></div>
+
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">Fulcrum</a>
+            <div class="nav-links">
+                <a href="#essence">The Difference</a>
+                <a href="#principles">Technology</a>
+                <a href="#proof">Proof</a>
+                <a href="#architecture">Sovereign Cloud</a>
+                <a href="mailto:fulcrumcaintelligence@gmail.com" class="nav-cta">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-label">
+                <div class="status-dot"></div>
+                <span>Autonomous AI Agents · GraphRAG Engine</span>
+            </div>
+            <h1>The End of Summary.<br>The Era of Proof.</h1>
+            <p class="hero-description">
+                Fulcrum replaces passive LLM summaries with active AI Agents. We use GraphRAG to map every connection across your discovery, spotting strategic weaknesses faster than any summary tool.
+            </p>
+            <div class="hero-actions">
+                <a href="#contact" class="btn-primary">Integrate Fulcrum Now</a>
+                <a href="#essence" class="btn-secondary">Explore the Graph Advantage</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section section-alt" id="essence">
+        <div class="section-container">
+            <div class="section-header reveal">
+                <div class="section-label">The Reliability Gap</div>
+                <h2 class="section-title">We Built a Digital War Room</h2>
+                <p class="section-subtitle">
+                    Most legal AI helps you "write better." Fulcrum makes your case unbreakable. We combine neural networks with formal legal logic to create the first AI that can "show its work" to a judge.
+                </p>
+            </div>
+            
+            <div class="comparison-grid">
+                <div class="comparison-card reveal">
+                    <div class="comparison-label">Legacy Summary Tools</div>
+                    <h3 style="margin: 1.5rem 0;">Passive Content Condensing</h3>
+                    <p class="comparison-description">
+                        Standard tools read Page A and Page B separately. They lose the context of relationships, failing to see how a plaintiff's statement in 2021 contradicts an internal memo from 2018. They provide speed, but no tactical depth.
+                    </p>
+                </div>
+                
+                <div class="comparison-card fulcrum reveal">
+                    <div class="comparison-label">Fulcrum GraphRAG</div>
+                    <h3 style="margin: 1.5rem 0;">Strategic Connection Mapping</h3>
+                    <p class="comparison-description">
+                        Our AI agents build a relational web of your entire case. We use a GraphRAG system to build connections between plaintiffs and spot holes in cases by identifying contradictions that summary tools are blind to.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="principles">
+        <div class="section-container">
+            <div class="section-header reveal">
+                <div class="section-label">What Makes Us Groundbreaking</div>
+                <h2 class="section-title">Four Foundational Principles</h2>
+                <p class="section-subtitle">
+                    We are groundbreaking because we are the first company to admit that "Generative AI" is not enough for the law. Litigation requires Provable Logic, Adversarial Strategy, and Physical Sovereignty.
+                </p>
+            </div>
+            
+            <div class="principles-grid">
+                <div class="principle-card reveal">
+                    <div class="principle-content">
+                        <div class="principle-number">01 — NEURO-SYMBOLIC AI</div>
+                        <h3 class="principle-title">From "Vibes" to "Proof"</h3>
+                        
+                        <div class="principle-fact">
+                            <div class="principle-fact-label">Groundbreaking Fact</div>
+                            <p class="principle-fact-text">
+                                Fulcrum uses Neuro-Symbolic AI. We pair the Neural brain (which can read millions of messy documents) with a Symbolic brain (which is a hard-coded vault of legal rules).
+                            </p>
+                        </div>
+                        
+                        <p class="principle-result">
+                            <strong>The Result:</strong> When Fulcrum finds a fact, it doesn't just "guess" it's true. It generates a Reasoning Trace—a step-by-step mathematical proof showing exactly which document and which law led to that conclusion. It is the first AI that can actually "show its work" to a judge.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="principle-card reveal">
+                    <div class="principle-content">
+                        <div class="principle-number">02 — ADVERSARIAL AGENTS</div>
+                        <h3 class="principle-title">The "War Room" Mentality</h3>
+                        
+                        <div class="principle-fact">
+                            <div class="principle-fact-label">Groundbreaking Fact</div>
+                            <p class="principle-fact-text">
+                                We deploy Adversarial Agents. While you are building your case, an isolated part of Fulcrum is actively trying to tear it down. Most legal tech builds a "Librarian"—Fulcrum builds a "Red Team."
+                            </p>
+                        </div>
+                        
+                        <p class="principle-result">
+                            <strong>The Result:</strong> It acts as the Opposing Counsel, finding the "Class Killers" (the documents that prove your Lead Plaintiff is atypical) before the defense does. We don't just help you find evidence; we stress-test your strategy until it is unbreakable.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="principle-card reveal">
+                    <div class="principle-content">
+                        <div class="principle-number">03 — SINGLE-TENANT ARCHITECTURE</div>
+                        <h3 class="principle-title">Sovereign Intelligence</h3>
+                        
+                        <div class="principle-fact">
+                            <div class="principle-fact-label">Groundbreaking Fact</div>
+                            <p class="principle-fact-text">
+                                Fulcrum is Single-Tenant by default. We don't put you in an "apartment building" with other firms. We use automation to build you a "Private Island" (a dedicated Virtual Private Cloud) for every single matter.
+                            </p>
+                        </div>
+                        
+                        <p class="principle-result">
+                            <strong>The Result:</strong> Your data never touches the same "wires" as your opponents. It is physical, architectural isolation that lawyers—and their insurance companies—finally trust. In 2026, "The Cloud" is a liability. We solved it.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="principle-card reveal">
+                    <div class="principle-content">
+                        <div class="principle-number">04 — CLASS ACTION FOCUS</div>
+                        <h3 class="principle-title">The "Certification Factory"</h3>
+                        
+                        <div class="principle-fact">
+                            <div class="principle-fact-label">Groundbreaking Fact</div>
+                            <p class="principle-fact-text">
+                                We have automated the Rule 23 Certification Audit. General AI treats a divorce case and a $500M environmental class action the same. Fulcrum treats them like a high-precision engineering project.
+                            </p>
+                        </div>
+                        
+                        <p class="principle-result">
+                            <strong>The Result:</strong> We map the "Commonality" and "Typicality" of 10,000+ plaintiffs into a Knowledge Graph. We turn a 6-month manual paralegal nightmare into a 48-hour automated report that proves to a judge why the class must be certified.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section section-alt" id="proof">
+        <div class="section-container">
+            <div class="section-header reveal">
+                <div class="section-label">The Reasoning Trace</div>
+                <h2 class="section-title">How We Show Our Work</h2>
+                <p class="section-subtitle">
+                    Every AI-generated conclusion comes with a step-by-step mathematical proof. This is what separates us from generative guesswork—we can prove every fact to a judge.
+                </p>
+            </div>
+            
+            <div class="reasoning-trace reveal">
+                <div class="trace-header">
+                    <div class="trace-title">Live Audit Trail</div>
+                    <div class="trace-status">VERIFIED</div>
+                </div>
+                <div class="trace-content">
+                    <div class="trace-steps">
+                        <div class="trace-step">
+                            <div class="trace-step-number">STEP 1</div>
+                            <div class="trace-step-content">
+                                <div class="trace-step-label">Query Received</div>
+                                <div class="trace-step-data">"Did executives discuss pricing coordination before March 2021?"</div>
+                            </div>
+                        </div>
+                        
+                        <div class="trace-step">
+                            <div class="trace-step-number">STEP 2</div>
+                            <div class="trace-step-content">
+                                <div class="trace-step-label">Document Corpus Scan</div>
+                                <div class="trace-step-data">47,392 files analyzed across email, internal memos, board minutes, and financial records</div>
+                            </div>
+                        </div>
+                        
+                        <div class="trace-step">
+                            <div class="trace-step-number">STEP 3</div>
+                            <div class="trace-step-content">
+                                <div class="trace-step-label">Primary Source Located</div>
+                                <div class="trace-step-data">CEO_EMAIL_2021-02-14.eml | SHA-256: a3f7c9e8b2d4f1a6...</div>
+                            </div>
+                        </div>
+                        
+                        <div class="trace-step">
+                            <div class="trace-step-number">STEP 4</div>
+                            <div class="trace-step-content">
+                                <div class="trace-step-label">Text Extraction</div>
+                                <div class="trace-step-data">"We need to coordinate on pricing across all SKUs before Q2 earnings call. Let's align with regional managers next week."</div>
+                            </div>
+                        </div>
+                        
+                        <div class="trace-step">
+                            <div class="trace-step-number">STEP 5</div>
+                            <div class="trace-step-content">
+                                <div class="trace-step-label">Cross-Reference Validation</div>
+                                <div class="trace-step-data">Corroboration found: BOARD_MINUTES_2021-02-18.pdf (Match: 94.7%) — confirming pricing discussion occurred</div>
+                            </div>
+                        </div>
+                        
+                        <div class="trace-step">
+                            <div class="trace-step-number">STEP 6</div>
+                            <div class="trace-step-content">
+                                <div class="trace-step-label">Confidence Assessment</div>
+                                <div class="trace-step-data">Final Score: <span class="trace-step-highlight">98.7%</span> (Dual-source verification complete with independent corroboration)</div>
+                            </div>
+                        </div>
+                        
+                        <div class="trace-step">
+                            <div class="trace-step-number">STEP 7</div>
+                            <div class="trace-step-content">
+                                <div class="trace-step-label">Chain-of-Custody Sealed</div>
+                                <div class="trace-step-data">Timestamped: 2024-01-15T14:32:07Z | Immutable Ledger Entry: 0x4f2a8c9d...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="architecture">
+        <div class="section-container">
+            <div class="section-header reveal">
+                <div class="section-label">The Architecture</div>
+                <h2 class="section-title">Three Pillars of Trust</h2>
+                <p class="section-subtitle">
+                    Provable Logic, Adversarial Strategy, and Physical Sovereignty—built into the foundation.
+                </p>
+            </div>
+            
+            <div class="architecture-visual reveal">
+                <div class="architecture-diagram">
+                    <div class="arch-node">
+                        <div class="arch-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                <path d="M2 17l10 5 10-5"></path>
+                                <path d="M2 12l10 5 10-5"></path>
+                            </svg>
+                        </div>
+                        <h4>Provable Logic</h4>
+                        <p>Neuro-Symbolic AI that generates mathematical proof for every conclusion with full reasoning traces.</p>
+                    </div>
+                    
+                    <div class="arch-node">
+                        <div class="arch-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            </svg>
+                        </div>
+                        <h4>Adversarial Strategy</h4>
+                        <p>Red-team agents that attack your case to find weaknesses before opposing counsel does.</p>
+                    </div>
+                    
+                    <div class="arch-node">
+                        <div class="arch-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            </svg>
+                        </div>
+                        <h4>Physical Sovereignty</h4>
+                        <p>Single-tenant VPC isolation—your data never shares infrastructure with opponents.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section section-alt">
+        <div class="section-container">
+            <div class="section-header reveal" style="text-align: center; margin-bottom: 3rem;">
+                <div class="section-label">Performance Metrics</div>
+                <h2 class="section-title">Built for Precision</h2>
+            </div>
+            <div class="stats-showcase">
+                <div class="stat-item reveal">
+                    <div class="stat-icon-wrapper">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            <path d="M12 8v4"></path>
+                            <path d="M12 16h.01"></path>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number-large">Native</div>
+                        <div class="stat-label-elegant">IT Integration</div>
+                        <div class="stat-description">
+                            We link directly to your existing infrastructure. Our team works alongside your IT department to deploy within your firewall—no data ever leaves your control.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-item reveal">
+                    <div class="stat-icon-wrapper">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number-large">Rapid</div>
+                        <div class="stat-label-elegant">Onboarding</div>
+                        <div class="stat-description">Go from raw discovery data to a fully mapped relational case graph in hours, not weeks.</div>
+                    </div>
+                </div>
+                
+                <div class="stat-item reveal">
+                    <div class="stat-icon-wrapper">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6" y2="6"></line><line x1="6" y1="18" x2="6" y2="18"></line></svg>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number-large">100%</div>
+                        <div class="stat-label-elegant">Sovereign Cloud</div>
+                        <div class="stat-description">Dedicated Single-Tenant architecture for every matter. Your data is physically isolated from all other firms.</div>
+                    </div>
+                </div>
+            </div>
+    </section>
+
+    <section class="cta-section" id="contact">
+        <div class="cta-content reveal">
+            <h2>Ready to Move from<br>Guessing to Certainty?</h2>
+            <p>
+                See how Fulcrum's deterministic intelligence transforms class action litigation from probabilistic gambling into strategic certainty.
+            </p>
+            <div class="hero-actions">
+                <a href="#contact" class="btn-primary">
+                    <span>Request Demo</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
+                <a href="mailto:fulcrumcaintelligence@gmail.com" class="btn-primary">
+                    <span>Contact Us</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-brand">Fulcrum</div>
+            <p class="footer-legal">&copy; 2026 Fulcrum Intelligence Systems. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const offsetTop = target.offsetTop - 80;
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Scroll reveal animations with stagger
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('active');
+                    }, index * 50);
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -80px 0px'
+        });
+
+        document.querySelectorAll('.reveal').forEach(element => {
+            revealObserver.observe(element);
+        });
+
+        // Enhanced hover effects with mouse tracking
+        document.querySelectorAll('.comparison-card, .principle-card, .arch-node, .stat-item').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 20;
+                const rotateY = (centerX - x) / 20;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px) scale(1.02)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+            });
+        });
+
+        // Parallax effect for hero section
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero-container');
+            if (hero && scrolled < window.innerHeight) {
+                hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+                hero.style.opacity = 1 - (scrolled / window.innerHeight) * 0.3;
+            }
+            lastScroll = scrolled;
+        });
+    </script>
+</body>
+</html>
+
